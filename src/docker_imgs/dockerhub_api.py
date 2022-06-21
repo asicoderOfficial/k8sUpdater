@@ -15,7 +15,7 @@ def get_search_img_dockerhub_api(img_name:str) -> dict:
     Returns:
         json: The JSON response from the DockerHub API.
     """    
-    loads(popen(search_dockerhub_command.substitute(img_name=img_name)).read())
+    return loads(popen(search_dockerhub_command.substitute(img_name=img_name)).read())
 
 
 def img_namespace_for_search_query(search_query_response:dict, img_name) -> str:

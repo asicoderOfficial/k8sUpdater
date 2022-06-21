@@ -17,4 +17,4 @@ def _container_id_is_docker(container_id:str) -> bool:
         bool: True if the string is a Docker container ID (matches the regex), False otherwise.
     """
 
-    return re.match('docker://([0-9]+([a-zA-Z]+[0-9]+)+)', container_id) is not None
+    return re.match('docker-pullable://[a-zA-Z]+@sha256:([a-zA-Z]+([0-9]+[a-zA-Z]+)+)', container_id) is not None
