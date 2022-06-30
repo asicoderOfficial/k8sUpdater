@@ -1,4 +1,3 @@
-from typing_extensions import clear_overloads
 
 
 def perform_automatic_update(curr_version_number:str, latest_version_number:str, version_frontier:int) -> bool:
@@ -29,14 +28,16 @@ def perform_automatic_update(curr_version_number:str, latest_version_number:str,
     latest_version_levels = latest_version_number.split('.')
     curr_version_levels = curr_version_number.split('.')
     shortest_version_number = min(len(latest_version_levels), len(curr_version_levels))
-    if version_frontier <= 0 or version_frontier > len(shortest_version_number):
+    if version_frontier <= 0 or version_frontier > shortest_version_number:
         return True
+    elif curr_version_number == latest_version_number:
+        return False
     #Check if before the frontier, the versions are the same.
-    for i in range(version_frontier-1):
+    for i in range(version_frontier):
         if latest_version_levels[i] > curr_version_levels[i]:
             return False
     #Check if after the frontier, the current version is outdated.
-    for i in range(version_frontier - 1, shortest_version_number):
+    for i in range(version_frontier, shortest_version_number):
         if latest_version_levels[i] > curr_version_levels[i]:
             return True
     if shortest_version_number == len(curr_version_levels):
