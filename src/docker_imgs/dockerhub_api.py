@@ -1,8 +1,7 @@
+import requests
 from json import loads
-from os import popen
 from urllib.request import urlopen
-from src.utilities.commands import search_dockerhub_command
-from src.utilities.urls import dockerhub_api_call_template
+from src.utilities.urls import dockerhub_api_call_template_all_tags, dockerhub_cookies, dockerhub_search_api_call, dockerhub_api_call_template_specific_tag
 
 
 def get_search_img_dockerhub_api(img_name:str) -> dict:
@@ -15,7 +14,7 @@ def get_search_img_dockerhub_api(img_name:str) -> dict:
     Returns:
         json: The JSON response from the DockerHub API.
     """    
-    return loads(popen(search_dockerhub_command.substitute(img_name=img_name)).read())
+    return loads(requests.get(dockerhub_search_api_call.substitute(img_name=img_name), cookies=dockerhub_cookies).text)
 
 
 def img_namespace_for_search_query(search_query_response:dict, img_name) -> str:
@@ -51,4 +50,24 @@ def get_latest_img_date_dockerhub_api(namespace:str, name:str, tag:str) -> str:
     Returns:
         str: The date of the latest version of the image with the specified tag.
     """    
-    return loads(urlopen(dockerhub_api_call_template.substitute(namespace=namespace, image_name=name, image_tag=tag)).read())['last_updated']
+    return loads(urlopen(dockerhub_api_call_template_specific_tag.substitute(namespace=namespace, image_name=name, image_tag=tag)).read())['last_updated']
+
+
+def get_version_for_latest_tag(img_name:str, img_namespace:str) -> str:
+    """ Traverse the json that contains all the available versions of the image, to find the real version number corresponding to the latest tag.
+
+    Args:
+        img_name (str): The name of the image.
+        img_namespace (str): The namespace of the image.
+
+    Returns:
+        str: The version of the image, which currently has the latest tag, e.g. 1.7.9
+    """    
+    catalog = loads(urlopen(dockerhub_api_call_template_all_tags.substitute(namespace=img_namespace, image_name=img_name)).read())
+    for result in catalog['results']:
+        if 'latest' in result['name']:
+            latest_imgs_sha256 = set([img['digest'] for img in result['images']])
+        else:
+            curr_imgs_sha256 = set([img['digest'] for img in result['images']])
+            if latest_imgs_sha256 == curr_imgs_sha256 and '.' in result['name']:
+                return result['name']
