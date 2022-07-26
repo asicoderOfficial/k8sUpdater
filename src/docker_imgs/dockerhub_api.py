@@ -4,6 +4,12 @@ from urllib.request import urlopen
 from src.utilities.urls import dockerhub_api_call_template_all_tags, dockerhub_cookies, dockerhub_search_api_call, dockerhub_api_call_template_specific_tag
 
 
+class DockerHubImgNotFound(Exception):
+    """ Raised when the image is not found on DockerHub.
+    """    
+    pass
+
+
 def get_search_img_dockerhub_api(img_name:str) -> dict:
     """ Given an image name, this function queries the DockerHub API as if it was a user searching for that name on the webpage's Explore bar,
     to then get the namespace of it and be able to query the DockerHub API to get the dates of the latest and current versions.
@@ -26,7 +32,7 @@ def img_namespace_for_search_query(search_query_response:dict, img_name) -> str:
 
     Raises:
         ValueError: If the response passed was already empty.
-        Exception: If the response passed was not empty but did not contain the image name (there may be images that use it, but not the actual one).
+        DockerHubImgNotFound: If the response passed was not empty but did not contain the image name (there may be images that use it, but not the actual one).
 
     Returns:
         str: The namespace of the image.
@@ -36,7 +42,7 @@ def img_namespace_for_search_query(search_query_response:dict, img_name) -> str:
         if img_name in s['name']:
             namespace = 'library' if s['name'] == img_name else s['name'].split('/')[0]
             return namespace
-    raise Exception(f'Image with name {img_name} not found in the DockerHub API response.')
+    raise DockerHubImgNotFound(f'Image with name {img_name} not found in the DockerHub API response.')
 
 
 def get_latest_img_date_dockerhub_api(namespace:str, name:str, tag:str) -> str:
