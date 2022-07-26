@@ -1,0 +1,4 @@
+kubernetes
+kopf
+packaging
+python-gitlab
