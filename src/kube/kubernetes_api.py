@@ -30,10 +30,19 @@ def get_bearer_token(api_instance:client.CoreV1Api, name:str, namespace:str) -> 
 
 
 #TODO: Add logging of api_response and return it in a human understandable way.
-def update_container_image(img_name:str, deployment_name:str, deployment_namespace:str, apiserver_url:str, tag:str='latest') -> None:
+def update_container_image(img_name:str, deployment_name:str, deployment_namespace:str, apiserver_url:str, prev_tag:str, tag:str='latest') -> None:
     """ Determines wether the image should be updated or not.
 
-    Args:The object with which we can interact with kubernetes api.
+    Args:
+        img_name (str): Name of the image of the deployment.
+        deployment_name (str): Name of the deployment.
+        deployment_namespace (str): Namespace of the deployment.
+        apiserver_url (str): The configuration host and port, of the form https://[host]:[port]
+        prev_tag (str): The previous tag the image had.
+        tag (str, optional): The tag user wants to update to. 
+            If latest, and the previous tag was latest, only a restart is needed.
+            Else, the deployment body is changed, as a Always imagePullPolicy is assumed. 
+            Defaults to 'latest'.
     Returns:
         None
     """    
@@ -46,7 +55,7 @@ def update_container_image(img_name:str, deployment_name:str, deployment_namespa
     with client.ApiClient(configuration) as api_client:
         # Create an instance of the API class
         api_instance = client.AppsV1Api(api_client)
-    if tag == 'latest':
+    if tag == prev_tag == 'latest':
         restart_deployment(api_instance, deployment_name, deployment_namespace)
     else:
         body = {
