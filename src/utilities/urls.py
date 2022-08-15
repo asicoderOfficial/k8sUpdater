@@ -2,7 +2,7 @@ from string import Template
 
 
 dockerhub_api_call_template_specific_tag = Template('https://hub.docker.com/v2/repositories/$namespace/$image_name/tags/$image_tag')
-dockerhub_api_call_template_all_tags = Template('https://hub.docker.com/v2/repositories/$namespace/$image_name/tags/')
+dockerhub_api_call_template_all_tags = Template('https://hub.docker.com/v2/repositories/$namespace/$image_name/tags/?page=$page')
 dockerhub_search_api_call = Template('https://hub.docker.com/api/content/v1/products/search?page_size=100&q=$img_name')
 dockerhub_cookies = {'Accept': 'application/json',
                     'Accept-Language': 'en-US,en;q=0.9',
