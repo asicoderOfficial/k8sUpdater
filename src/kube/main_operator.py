@@ -77,6 +77,7 @@ def on_resume(spec:dict, **kwargs:dict) -> None:
 def updates_checker(spec:dict, **_:dict) -> None:
     """ This is the operator's heart.
     It is the function responsible of retrieving the deployment's images versions continuously and update/notify the user.
+    See here for more information -> https://kopf.readthedocs.io/en/stable/timers/
 
     Returns: None
     """    

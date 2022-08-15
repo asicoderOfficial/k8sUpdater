@@ -109,12 +109,12 @@ def get_updatable_dockerhub_imgs(img_name:str, img_namespace:str, curr_version:s
     regexp = re.compile(reg)
     curr_version_regex_search = regexp.search(curr_version)
     if curr_version_regex_search is not None:
-        #The version number of the deployment's image contains a PEP440 version number as a substring.
+        # The version number of the deployment's image contains a PEP440 version number as a substring.
         curr_version_found = curr_version_regex_search.group()
-        #Extract the version number, and the substrings before and after it.
+        # Extract the version number, and the substrings before and after it.
         curr_version_partition = curr_version.partition(curr_version_found)
     else:
-        #No PEP440 version number found in the deployment's image.
+        # No PEP440 version number found in the deployment's image.
         return newer_versions
     try:
         url = dockerhub_api_call_template_all_tags.substitute(namespace=img_namespace, image_name=img_name, page=page)
@@ -123,15 +123,15 @@ def get_updatable_dockerhub_imgs(img_name:str, img_namespace:str, curr_version:s
             for res in content['results']:
                 m = regexp.search(res['name'])        
                 if m is not None:
-                    #The version number of DockerHub's registry contains a PEP440 version number as a substring.
+                    # The version number of DockerHub's registry contains a PEP440 version number as a substring.
                     version_number = m.group()
                     tag_partition = res['name'].partition(version_number)
                     if tag_partition[0] == curr_version_partition[0] \
                         and tag_partition[2] == curr_version_partition[2]:
                         if tag_partition[1] == curr_version_partition[1]:
                             return newer_versions
-                        #As traversing is linear with time, the first version that is found is the latest version, and the last is the first one.
-                        #However, there are versions that specify the latest of a level. That's why sha256 must be compared as well.
+                        # As traversing is linear with time, the first version that is found is the latest version, and the last is the first one.
+                        # However, there are versions that specify the latest of a level. That's why sha256 must be compared as well.
                         found_version_obj = version.Version(version_number)
                         if 'digest' in res \
                         and res['digest'] not in sha256_of_found_imgs:
@@ -141,7 +141,7 @@ def get_updatable_dockerhub_imgs(img_name:str, img_namespace:str, curr_version:s
                             newer_versions[found_version_obj] = res['name']
             page += 1 
     except HTTPError:
-        #No match is found, or all matches found are newer than the current version.
+        # No match is found, or all matches found are newer than the current version.
         return newer_versions
     except Exception:
         get_updatable_docker_imgs_failed(img_name, img_namespace, curr_version, url, page)

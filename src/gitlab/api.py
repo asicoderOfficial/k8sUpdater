@@ -62,7 +62,7 @@ def get_all_gitlab_imgs_in_repository(gl:gitlab.Gitlab=None) -> list:
     if base_url is None:
         return []
     if gl is None and base_url != token != project_id != '':
-        #The method is being called externally, no gitlab object, credentials are directly used to create it.
+        # The method is being called externally, no gitlab object, credentials are directly used to create it.
         gl = _create_gitlab_obj(base_url, token)
     project = _get_gitlab_project(gl, project_id)
     plist = project.repositories.list(all=True)

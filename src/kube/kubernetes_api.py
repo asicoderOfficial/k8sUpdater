@@ -35,10 +35,10 @@ def get_kubernetes_api_instance() -> client.CoreV1Api:
         client.CoreV1Api: The object with which we can interact with kubernetes api.
     """    
     try:
-        #The operator is being executed in a pod (production).
+        # The operator is being executed in a pod (production).
         api_instance = client.CoreV1Api(config.load_incluster_config())
     except:
-        #The operator is being executed from shell manually (development).
+        # The operator is being executed from shell manually (development).
         api_instance = client.CoreV1Api(config.new_client_from_config())
         return api_instance
     return api_instance
@@ -53,9 +53,9 @@ def get_apiserver_url(api_instance:client.CoreV1Api) -> str:
     Returns:
         str: The apiserver url, in format https://[host]:[port]
     """    
-    #Get information for all pods
+    # Get information for all pods
     resp = api_instance.list_pod_for_all_namespaces()
-    #Set the URL needed to communicate with the API for updates beforehand
+    # Set the URL needed to communicate with the API for updates beforehand
     for pod in resp.items:
         if 'kube-apiserver' in pod.metadata.name:
             for container in pod.spec.containers:
@@ -118,16 +118,15 @@ def get_bearer_token(api_instance:client.CoreV1Api, name:str, namespace:str) -> 
         str: The bearer token, base64 decoded.
     """    
     try:
-        #Get the service account resource
+        # Get the service account resource
         sa_resource = api_instance.read_namespaced_service_account(name=name, namespace=namespace)
-        #Get the token associated with the service account
+        # Get the token associated with the service account
         token_resource_name = [s for s in sa_resource.secrets if 'token' in s.name][0].name
-        #Get the secret resource associated with the service account
-        secret = api_instance.read_namespaced_secret(
-            name=token_resource_name, namespace=namespace)
-        #Get the token data out of the secret
+        # Get the secret resource associated with the service account
+        secret = api_instance.read_namespaced_secret(name=token_resource_name, namespace=namespace)
+        # Get the token data out of the secret
         btoken = secret.data['token']
-        #The token data is base64 encoded, so we decode it
+        # The token data is base64 encoded, so we decode it
         token = base64.b64decode(btoken).decode()
     except Exception:
         get_bearer_token_failed(name, namespace, format_exc())
