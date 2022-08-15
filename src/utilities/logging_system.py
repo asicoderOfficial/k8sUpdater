@@ -41,25 +41,25 @@ def email_logging(subject:str, message:str, use_tls:bool=False) -> None:
         try:
             sender, recipient, password, host, port = _get_email_environment_variables()
 
-            #Create your SMTP session 
+            # Create your SMTP session 
             if password == '':
                 smtp_server = SMTP(host, port) 
             else:
                 smtp_server = SMTP_SSL(host, port)
             if use_tls:
-                #Use TLS to add security 
+                # Use TLS to add security 
                 smtp_server.starttls() 
-            #Defining The Message 
+            # Defining The Message 
             email_obj = EmailMessage()
             email_obj.set_content(message)
             email_obj['Subject'] = subject
             email_obj['From'] = sender
             email_obj['To'] = recipient
 
-            #Sending the Email
+            # Sending the Email
             smtp_server.login(sender, password)
             smtp_server.send_message(email_obj)
-            #Terminating the session 
+            # Terminating the session 
             smtp_server.quit()
         except Exception:
             subject = 'Email logging failed'
@@ -117,7 +117,7 @@ def stdout_logging(subject:str, msg:str, level:str='info') -> None:
         logging.critical(f'{subject}: \n {msg} \n')
 
 
-#Telegram logger class
+# Telegram logger class
 
 class RequestsHandler(Handler):
     def __init__(self, token:str, chat_id:str):

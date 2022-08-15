@@ -3,7 +3,7 @@ from packaging import version
 import requests
 from json import loads
 from urllib.request import urlopen
-from src.utilities.urls import dockerhub_api_call_template_all_tags, dockerhub_cookies, dockerhub_search_api_call, dockerhub_api_call_template_specific_tag
+from src.utilities.urls import dockerhub_api_call_template_all_tags, dockerhub_headers, dockerhub_search_api_call, dockerhub_api_call_template_specific_tag
 from src.utilities.logging_messages import get_updatable_docker_imgs_failed, docker_image_not_found, docker_date_not_found
 from urllib.error import HTTPError
 
@@ -37,7 +37,7 @@ def get_search_img_dockerhub_api(img_name:str) -> dict:
         json: The JSON response from the DockerHub API.
     """    
     try:
-        return loads(requests.get(dockerhub_search_api_call.substitute(img_name=img_name), cookies=dockerhub_cookies, timeout=0.4).text)
+        return loads(requests.get(dockerhub_search_api_call.substitute(img_name=img_name), cookies=dockerhub_headers, timeout=0.4).text)
     except Exception:
         docker_image_not_found(img_name)
         raise DockerHubImgNotFound(f'Image with name {img_name} not found in the DockerHub API response while looking for its corresponding namespace.')
