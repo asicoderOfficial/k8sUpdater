@@ -27,6 +27,7 @@ def perform_automatic_update(curr_version_number:str, latest_version_number:str,
     Returns:
         bool: Update automatically or not, True or False respectively.
     """    
+    if curr_version_number == 'latest' and latest_version_number == 'latest': return True
     latest_version_levels = latest_version_number.split('.')
     curr_version_levels = curr_version_number.split('.')
     shortest_version_number = min(len(latest_version_levels), len(curr_version_levels))
@@ -140,4 +141,5 @@ def get_newest_docker_updatable_version(updatable_versions:dict, version_frontie
     Returns:
         str: The latest version to which an automatic update can be performed.
     """    
-    return updatable_versions[max([v for v in updatable_versions if perform_automatic_update(str(v), latest_version_number, version_frontier)])]
+    latest_updatable_versions = [v for v in updatable_versions if perform_automatic_update(str(v), latest_version_number, version_frontier)]
+    return 'latest' if latest_updatable_versions == ['latest'] else updatable_versions[max(latest_updatable_versions)]
