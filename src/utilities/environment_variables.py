@@ -16,16 +16,6 @@ def _is_email_logging_ready() -> bool:
         and 'EMAIL_PORT' in environ
 
 
-def _is_telegram_logging_ready() -> bool:
-    """ Check if telegram logging is ready.
-    
-    Returns:
-        bool: True if telegram logging is ready, False otherwise.
-    """    
-    return 'TELEGRAM_TOKEN' in environ \
-        and 'TELEGRAM_CHAT_ID' in environ
-
-
 def _get_email_environment_variables() -> tuple:
     """ Get email environment variables.
     Args:
@@ -35,6 +25,16 @@ def _get_email_environment_variables() -> tuple:
         tuple: The email environment variables.
     """
     return getenv('EMAIL_SENDER'), getenv('EMAIL_RECIPIENT'), getenv('EMAIL_PASSWORD'), getenv('EMAIL_HOST'), int(getenv('EMAIL_PORT'))
+
+
+def _is_telegram_logging_ready() -> bool:
+    """ Check if telegram logging is ready.
+    
+    Returns:
+        bool: True if telegram logging is ready, False otherwise.
+    """    
+    return 'TELEGRAM_TOKEN' in environ \
+        and 'TELEGRAM_CHAT_ID' in environ
 
 
 def _get_telegram_environment_variables() -> tuple:
@@ -111,36 +111,10 @@ def get_refresh_frequency_in_seconds_environment_variable() -> int:
     return int(getenv('REFRESH_FREQUENCY_IN_SECONDS'))
 
 
-def set_environment_variables(env_vars:dict) -> None:
-    """ Set the environment variables defined in env_vars for the current container.
-    This method is meant to be used in development, to be able to easily change the environment variables with the object yaml file.
-
-    Args:
-        env_vars (dict): Contains the environment variables to be set, of the form {'environment_variable_name' : 'value'}.
-
+def get_internet_available_environment_variable() -> bool:
+    """ Get the environment variable for the internet available.
+    
     Returns:
-        None
+        bool: The environment variable value for the internet available.
     """    
-    for var_name, var_value in env_vars.items():
-        if isinstance(var_value, str):
-            var_name = _name_env_variable(var_name)
-            if var_value.isdigit():
-                environ[var_name.upper()] = int(var_value)
-            elif var_value.isdecimal():
-                environ[var_name.upper()] = float(var_value)
-            else:
-                environ[var_name.upper()] = var_value
-        elif isinstance(var_value, list) and len(var_value) != 0:
-            if var_name == 'gitlabContainerRegistry':
-                environ['GITLAB_BASE_URL'] = var_value[0]            
-                environ['GITLAB_TOKEN'] = var_value[1]
-                environ['GITLAB_PROJECT_ID'] = var_value[2]
-            elif var_name == 'emailLogging':
-                environ['EMAIL_HOST'] = var_value[0]
-                environ['EMAIL_PASSWORD'] = var_value[1]
-                environ['EMAIL_SENDER'] = var_value[2]
-                environ['EMAIL_RECIPIENT'] = var_value[3]
-                environ['EMAIL_PORT'] = var_value[4]
-            elif var_name == 'telegramLogging':
-                environ['TELEGRAM_TOKEN'] = var_value[0]
-                environ['TELEGRAM_CHAT_ID'] = var_value[1]
+    return bool(getenv('INTERNET_AVAILABLE'))
