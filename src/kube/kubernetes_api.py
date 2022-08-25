@@ -83,7 +83,7 @@ def get_namespaces_to_look_at(api_instance:client.CoreV1Api, native_namespaces:l
     return namespaces_to_look_at
 
 
-def update_container_image(img_name:str, deployment_name:str, deployment_namespace:str, apiserver_url:str, prev_tag:str, tag:str) -> None:
+def update_container_image(img_name:str, deployment_name:str, deployment_namespace:str, apiserver_url:str, prev_tag:str, tag:str, logs_registry_json_id:str, curr_img_id:str) -> None:
     """ Determines wether the image should be updated or not.
 
     Args:
@@ -99,20 +99,22 @@ def update_container_image(img_name:str, deployment_name:str, deployment_namespa
     Returns:
         None
     """    
-    api_instance = get_api_instance(apiserver_url)
+    api_instance = get_api_instance(apiserver_url, logs_registry_json_id, curr_img_id)
     if tag == prev_tag == 'latest' and get_latest_preference_environment_variable() == 'true':
-        restart_deployment(api_instance, deployment_name, deployment_namespace)
+        restart_deployment(api_instance, deployment_name, deployment_namespace, logs_registry_json_id, curr_img_id)
     elif tag != 'latest' and tag != prev_tag:
-        update_img_version_in_deployment(api_instance, img_name, tag, deployment_name, deployment_namespace)
+        update_img_version_in_deployment(api_instance, img_name, tag, deployment_name, deployment_namespace, logs_registry_json_id, curr_img_id)
 
 
-def get_bearer_token(api_instance:client.CoreV1Api, name:str, namespace:str) -> str:
+def get_bearer_token(api_instance:client.CoreV1Api, name:str, namespace:str, logs_registry_json_id:str, curr_img_id:str) -> str:
     """ Obtain the bearer token to authenticate for using the kubernetes API.
 
     Args:
         api_instance (client.CoreV1Api): The object with which we can interact with kubernetes api.
         name (str): Name of the account.
         namespace (str): Namespace of the account.
+        logs_registry_json_id (str): The id of the logs registry json.
+        curr_img_id (str): The id of the current image.
 
     Returns:
         str: The bearer token, base64 decoded.
@@ -129,18 +131,20 @@ def get_bearer_token(api_instance:client.CoreV1Api, name:str, namespace:str) -> 
         # The token data is base64 encoded, so we decode it
         token = base64.b64decode(btoken).decode()
     except Exception:
-        get_bearer_token_failed(name, namespace, format_exc())
+        get_bearer_token_failed(name, namespace, format_exc(), logs_registry_json_id, curr_img_id)
         raise CanNotGetBearerTokenException(f'Could not get bearer token for account name {name} in namespace {namespace} from kubernetes api \n \
             {format_exc()}')
 
     return token
 
 
-def get_api_instance(apiserver_url:str) -> client.AppsV1Api:
+def get_api_instance(apiserver_url:str, logs_registry_json_id:str, curr_img_id:str) -> client.AppsV1Api:
     """ Obtains an api instance to interact with the kubernetes api.
 
     Args:
         apiserver_url (str): The configuration host and port, of the form https://[host]:[port]
+        logs_registry_json_id (str): The id of the logs registry json.
+        curr_img_id (str): The id of the current image.
 
     Returns:
         client.AppsV1Api: The object with which we can interact with kubernetes api.
@@ -149,21 +153,21 @@ def get_api_instance(apiserver_url:str) -> client.AppsV1Api:
         configuration = client.Configuration()
         api_instance = client.CoreV1Api(config.new_client_from_config())
         configuration.host = apiserver_url
-        configuration.api_key['authorization'] = get_bearer_token(api_instance, "default", "kube-system")
+        configuration.api_key['authorization'] = get_bearer_token(api_instance, "default", "kube-system", logs_registry_json_id, curr_img_id)
         configuration.api_key_prefix['authorization'] = 'Bearer'
         configuration.verify_ssl=False
         with client.ApiClient(configuration) as api_client:
             # Create an instance of the API class
             api_instance = client.AppsV1Api(api_client)
     except Exception:
-        get_api_instance_failed(apiserver_url, format_exc())
+        get_api_instance_failed(apiserver_url, format_exc(), logs_registry_json_id, curr_img_id)
         raise CanNotGetAPIInstanceException(f'Could not get api instance for apiserver url {apiserver_url} \n \
             {format_exc()}')
 
     return api_instance
 
 
-def update_img_version_in_deployment(api_instance:client.CoreV1Api, img_name:str, tag:str, deployment_name:str, deployment_namespace:str) -> None:
+def update_img_version_in_deployment(api_instance:client.CoreV1Api, img_name:str, tag:str, deployment_name:str, deployment_namespace:str, logs_registry_json_id:str, curr_img_id:str) -> None:
     """ Updates the image version in the deployment by performing a patch, which changes the tag of the image.
     As an imagePullPolicy is assumed to be Always, the deployment is updated automatically.
 
@@ -173,6 +177,8 @@ def update_img_version_in_deployment(api_instance:client.CoreV1Api, img_name:str
         tag (str): Tag to update to.
         deployment_name (str): Name of the deployment.
         deployment_namespace (str): Namespace of the deployment.
+        logs_registry_json_id (str): The id of the logs registry json.
+        curr_img_id (str): The id of the current image.
 
     Returns:
         None
@@ -192,19 +198,21 @@ def update_img_version_in_deployment(api_instance:client.CoreV1Api, img_name:str
             }
         api_instance.patch_namespaced_deployment(deployment_name, deployment_namespace, body, pretty=True)
     except Exception:
-        update_deployment_failed(deployment_name, deployment_namespace, img_name, tag, format_exc())
+        update_deployment_failed(deployment_name, deployment_namespace, img_name, tag, format_exc(), logs_registry_json_id, curr_img_id)
         raise CanNotUpdateDeploymentException(f'Could not update deployment {deployment_name} in namespace {deployment_namespace} with image {img_name}:{tag} \n \
             {format_exc()}')
 
 
-def restart_deployment(api_instance:client.CoreV1Api, deployment_name:str, deployment_namespace:str) -> None:
+def restart_deployment(api_instance:client.CoreV1Api, deployment_name:str, deployment_namespace:str, logs_registry_json_id:str, curr_img_id:str) -> None:
     """ Restarts the given deployment. It is needed when the tag to update to, is the same (latest).
     Therefore, just a restart is needed, the tag does not change.
 
     Args:
         api_instance (client.CoreV1Api): The object with which we can interact with kubernetes api.
-        deployment (str): Deployment name
-        namespace (str): Deployment namespace
+        deployment_name (str): Deployment name
+        deployment_namespace (str): Deployment namespace
+        logs_registry_json_id (str): The id of the logs registry json.
+        curr_img_id (str): The id of the current image.
     
     Returns:
         None
@@ -225,6 +233,6 @@ def restart_deployment(api_instance:client.CoreV1Api, deployment_name:str, deplo
         }
         api_instance.patch_namespaced_deployment(deployment_name, deployment_namespace, body, pretty='true')
     except Exception:
-        restart_deployment_failed(deployment_name, deployment_namespace, format_exc())
+        restart_deployment_failed(deployment_name, deployment_namespace, format_exc(), logs_registry_json_id, curr_img_id)
         raise CanNotRestartDeploymentException(f'Could not restart deployment {deployment_name} in namespace {deployment_namespace} \n \
             {format_exc()}')

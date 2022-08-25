@@ -26,12 +26,14 @@ class DockerHubAbnormalJSONResponse(Exception):
     pass
 
 
-def get_search_img_dockerhub_api(img_name:str) -> dict:
+def get_search_img_dockerhub_api(img_name:str, logs_registry_json_id:str, curr_img_id:str) -> dict:
     """ Given an image name, this function queries the DockerHub API as if it was a user searching for that name on the webpage's Explore bar,
     to then get the namespace of it and be able to query the DockerHub API to get the dates of the latest and current versions.
 
     Args:
         img_name (str): The name of the image to search.
+        logs_registry_json_id (str): The ID of the logs registry JSON file.
+        curr_img_id (str): The ID of the current image.
 
     Returns:
         json: The JSON response from the DockerHub API.
@@ -39,16 +41,18 @@ def get_search_img_dockerhub_api(img_name:str) -> dict:
     try:
         return loads(requests.get(dockerhub_search_api_call.substitute(img_name=img_name), cookies=dockerhub_headers, timeout=0.4).text)
     except Exception:
-        docker_image_not_found(img_name)
+        docker_image_not_found(img_name, logs_registry_json_id, curr_img_id)
         raise DockerHubImgNotFound(f'Image with name {img_name} not found in the DockerHub API response while looking for its corresponding namespace.')
     
 
-def img_namespace_for_search_query(search_query_response:dict, img_name:str) -> str:
+def img_namespace_for_search_query(search_query_response:dict, img_name:str, logs_registry_json_id:str, curr_img_id:str) -> str:
     """ Given a search query response from the DockerHub API, this function returns the namespace of the image.
 
     Args:
         search_query_response (dict): The JSON response from the DockerHub API.
         img_name (str): The name of the image to search.
+        logs_registry_json_id (str): The ID of the logs registry JSON file.
+        curr_img_id (str): The ID of the current image.
 
     Raises:
         ValueError: If the response passed was already empty.
@@ -62,17 +66,19 @@ def img_namespace_for_search_query(search_query_response:dict, img_name:str) -> 
         if img_name in s['name']:
             namespace = 'library' if s['name'] == img_name else s['name'].split('/')[0]
             return namespace
-    docker_image_not_found(img_name)
+    docker_image_not_found(img_name, logs_registry_json_id, curr_img_id)
     raise DockerHubImgNotFound(f'Image with name {img_name} not found in the DockerHub API response while looking for its corresponding namespace.')
 
 
-def get_latest_img_date_dockerhub_api(img_namespace:str, img_name:str, img_tag:str) -> str:
+def get_latest_img_date_dockerhub_api(img_namespace:str, img_name:str, img_tag:str, logs_registry_json_id:str, curr_img_id:str) -> str:
     """ Given a namespace, name and tag of an image, this function queries the DockerHub API to get the date of the latest version of that image.
 
     Args:
         img_namespace (str): The namespace of the image.
         img_name (str): The name of the image.
         img_tag (str): The tag of the image.
+        logs_registry_json_id (str): The ID of the logs registry JSON file.
+        curr_img_id (str): The ID of the current image.
 
     Returns:
         str: The date of the latest version of the image with the specified tag.
@@ -80,11 +86,11 @@ def get_latest_img_date_dockerhub_api(img_namespace:str, img_name:str, img_tag:s
     try:
         return loads(urlopen(dockerhub_api_call_template_specific_tag.substitute(namespace=img_namespace, image_name=img_name, image_tag=img_tag)).read())['last_updated']
     except Exception:
-        docker_date_not_found(img_name, img_tag, img_namespace)
+        docker_date_not_found(img_name, img_tag, img_namespace, logs_registry_json_id, curr_img_id)
         raise DockerHubDateNotFound(f'Date of the latest version of the image {img_namespace}/{img_name}:{img_tag} not found in the DockerHub API response.')
 
 
-def get_updatable_dockerhub_imgs(img_name:str, img_namespace:str, curr_version:str) -> dict:
+def get_updatable_dockerhub_imgs(img_name:str, img_namespace:str, curr_version:str, logs_registry_json_id:str, curr_img_id:str) -> dict:
     """ Traverse the json that contains all the available versions of the image,
     saving all the newer versions of the image in a dictionary.
 
@@ -95,6 +101,8 @@ def get_updatable_dockerhub_imgs(img_name:str, img_namespace:str, curr_version:s
         img_name (str): The name of the image.
         img_namespace (str): The namespace of the image.
         curr_version (str): The current name of the image.
+        logs_registry_json_id (str): The ID of the logs registry JSON file.
+        curr_img_id (str): The ID of the current image.
 
     Returns:
         dict: All images previous to the current version available in DockerHub.
@@ -144,7 +152,7 @@ def get_updatable_dockerhub_imgs(img_name:str, img_namespace:str, curr_version:s
         # No match is found, or all matches found are newer than the current version.
         return newer_versions
     except Exception:
-        get_updatable_docker_imgs_failed(img_name, img_namespace, curr_version, url, page)
+        get_updatable_docker_imgs_failed(img_name, img_namespace, curr_version, url, page, logs_registry_json_id, curr_img_id)
         raise DockerHubAbnormalJSONResponse(f'Abnormal response from the DockerHub API while getting the updatable images for the image {img_name} of namespace {img_namespace}.')
     
 
