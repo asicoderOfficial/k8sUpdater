@@ -1,7 +1,7 @@
 apiVersion: kopf.dev/v1
 kind: VersioningHandler
 metadata:
-  name: test-obj-kopf
+  name: # Name of the object
 spec:
   deployment:
     # The deployment you want to track
