@@ -131,6 +131,8 @@ spec:
 
 And that's it! Now the operator will be checking for suitable updates every 2 seconds.
 
+For building your custom image, clone this repository, modify the code and build it using ```build.sh``` file.
+
 ## 2. Environment variables explanation
 2.1. <em>REFRESH_FREQUENCY_IN_SECONDS</em>
 **COMPULSORY**
@@ -218,6 +220,8 @@ When sending a new log message, it is first checked that it is not the same as i
 - [ ] Generate multiple replicas of the operator and share the workload between them.
 - [ ] Enable multiple GitLab accounts in the same deployment.
 - [ ] Implement GitHub Actions to automatically build and push the new image to DockerHub.
+- [ ] Integration testing.
+
 ## 6. How to contribute
 Check [this guide](https://gist.github.com/MarcDiethelm/7303312).
 
