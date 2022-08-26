@@ -20,7 +20,7 @@ spec:
       serviceAccountName: # The name.
       containers:
       - name: # Container's name
-        image: # Image name and tag from DockerHub
+        image: asiertest/k8supdater:0.1beta1 # Image name and tag from DockerHub
         imagePullPolicy: Always #VERY IMPORTANT! IT MUST BE Always.
         # command: ["sleep"]  # Used for testing, they do the trick if something fails, you can see the logs with kubernetes logs
         # args: ["infinity"]
