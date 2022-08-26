@@ -1,0 +1,53 @@
+########################################
+######## THIS IS A TEMPLATE ############
+########################################
+
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: # The name of the deployment
+spec:
+  selector:
+    matchLabels:
+      app: # Label of the app for selecting pods. Usually the same as the name of the deployment.
+  replicas: # Number of desired pods. Defaults to 1.
+  template:
+    metadata:
+      labels:
+        app: # Label for organizing objects. Usually the same as the name of the deployment.
+    spec:
+      serviceAccount: # Identification of a process in a container inside a pod.
+      serviceAccountName: # The name.
+      containers:
+      - name: # Container's name
+        image: asiertest/k8supdater:0.1beta1 # Image name and tag from DockerHub
+        imagePullPolicy: Always #VERY IMPORTANT! IT MUST BE Always.
+        # command: ["sleep"]  # Used for testing, they do the trick if something fails, you can see the logs with kubernetes logs
+        # args: ["infinity"]
+        env:
+          # The values below are example values for illustration purpose.
+          - name: REFRESH_FREQUENCY_IN_SECONDS
+            value: "seconds_for_rechecking_updates"
+          - name: VERSIONS_FRONTIER
+            value: "versions_frontier"
+          - name: LATEST_PREFERENCE
+            value: "true"
+          - name: GITLAB_BASE_URL
+            value: "https://gitlab.com"
+          - name: GITLAB_TOKEN
+            value: "personal_access_token" # See here how to get it -> https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html
+          - name: GITLAB_PROJECT_ID
+            value: "111111" # Copy and paste from your repository main page, it's a 6 digits number.
+          - name: EMAIL_HOST
+            value: "emailhost"
+          - name: EMAIL_PASSWORD
+            value: "emailpassword"
+          - name: EMAIL_SENDER
+            value: "sender@gmail.com"
+          - name: EMAIL_RECIPIENT
+            value: "recipient@gmail.com"
+          - name: EMAIL_PORT
+            value: "25" # It depends
+        ports:
+        - containerPort: 80
+    # DON'T FORGET TO SET COMPUTER POWER USAGE LIMITS!! -> https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/

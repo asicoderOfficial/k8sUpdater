@@ -1,0 +1,10 @@
+apiVersion: k8supdater/0.1beta1
+kind: VersioningHandler
+metadata:
+  name: # Name of the object
+spec:
+  deployment:
+    # The deployment you want to track
+  containerregistry:
+    # The container registry to look at for new versions.
+    # It must be either "dockerhub" or "gitlab", if not, an error with be thrown.

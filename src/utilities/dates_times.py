@@ -23,6 +23,9 @@ def docker_str_to_datetime(dt:str) -> datetime:
     Args:
         dt (str): String containing the datetime in the format given by DockerHub.
 
+    Raises:
+        ValueError: If the string does not match the expected format.
+
     Returns:
         datetime: dt in datetime format.
     """    

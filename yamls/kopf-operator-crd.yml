@@ -1,0 +1,35 @@
+############################
+##### DO NOT CHANGE ########
+############################
+
+apiVersion: apiextensions.k8s.io/0.1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: versioninghandlers.k8supdater
+spec:
+  scope: Namespaced
+  group: k8supdater
+  names:
+    kind: VersioningHandler
+    plural: versioninghandlers
+    singular: versioninghandler
+    shortNames:
+      - vh
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                deployment:
+                  type: string
+                containerregistry:
+                  type: string
+              required:
+              - deployment
+              - containerregistry
