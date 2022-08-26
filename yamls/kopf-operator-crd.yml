@@ -5,10 +5,10 @@
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: versioninghandlers.kopf.dev
+  name: versioninghandlers.k8supdater
 spec:
   scope: Namespaced
-  group: kopf.dev
+  group: k8supdater
   names:
     kind: VersioningHandler
     plural: versioninghandlers
