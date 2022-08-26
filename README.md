@@ -57,10 +57,10 @@ Let's see it with an example! We'll create an operator that monitors a  <em>ngin
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: versioninghandlers.kopf.dev
+  name: versioninghandlers.k8supdater
 spec:
   scope: Namespaced
-  group: kopf.dev
+  group: k8supdater
   names:
     kind: VersioningHandler
     plural: versioninghandlers
@@ -118,7 +118,7 @@ spec:
 ```
 3. Create and apply the object. You can find the template at yamls/object.yml
 ```
-apiVersion: kopf.dev/v1
+apiVersion: k8supdater/v1
 kind: VersioningHandler
 metadata:
   name: nginx-checker

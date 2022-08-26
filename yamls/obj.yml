@@ -1,4 +1,4 @@
-apiVersion: k8supdater/v1
+apiVersion: k8supdater/0.1beta1
 kind: VersioningHandler
 metadata:
   name: # Name of the object
