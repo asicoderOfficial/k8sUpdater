@@ -16,13 +16,15 @@ It was originally developed by [Asier Serrano Aramburu](https://www.linkedin.com
 
     2.2. VERSIONS_FRONTIER
 
-    2.3. Gitlab credentials
+    2.3. LATEST_PREFERENCE
 
-    2.4. E-mail logging credentials
+    2.4. Gitlab credentials
 
-    2.5. Telegram logging credentials
+    2.5. E-mail logging credentials
 
-    2.6. LATEST_PREFERENCE
+    2.6. Telegram logging credentials
+
+    
 3. [Source code overview (for developers)](https://github.com/asicoderOfficial/k8sUpdater#sourcecodeoverview)
 
     3.1. src/docker_imgs
