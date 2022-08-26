@@ -1,8 +1,11 @@
 ![alt text](https://github.com/asicoderOfficial/k8sUpdater/blob/main/logo.png)
 # K8sUpdater: Kubernetes automatic image versions control
 ![alt text](https://img.shields.io/badge/Python-3.8-blue)![alt text](https://img.shields.io/badge/license-Apache%202.0-blueviolet)
+
 **K8sUpdater** is a Kubernetes operator that checks for updates of deployment's images available [DockerHub](https://hub.docker.com/search?q=) and [Gitlab](https://docs.gitlab.com/ee/user/packages/container_registry/) container registries, and updates automatically or notifies the user based on its preferences.
+
 It is coded in Python 3.8 and uses the [Kopf](https://github.com/nolar/kopf) library to create the operator.
+
 It was originally developed by [Asier Serrano Aramburu](https://www.linkedin.com/in/asierserrano/) during his 2022 [summer internship](https://home.cern/summer-student-programme) at [CERN](https://home.web.cern.ch/).
 
 ## Index
@@ -134,6 +137,7 @@ Let's illustrate it with some examples with a value of 2 (the frontier is denote
 | 5.3. - 2.0      | 5.3. - 2.1                 | Update |
 | 5.3. - 2.0      | 5.3. - 3.2                 | Update |
 | 5.3. - 2.0      | 5.4. - 1                   | Notify |
+
 It is important to note that, for DockerHub images, this will work also for the ones whose tag contains an operating system, such as 3.2.1-alpine.
 It would find all the corresponding <em>-alpine</em> images, extract the version numbers and compare.
 
@@ -190,7 +194,9 @@ There are 3 channels for logging available, which share the same messages:
 * Telegram
 
 There is one log message which indicates that nothing has changed. In order to not have this log repeated multiple times, a <em>non-spamming mechanism</em> has been developed.
+
 For each object, a json file in a self-generated json folder is created, and inside it, the last log sent for each deployment's image is stored.
+
 When sending a new log message, it is first checked that it is not the same as it was previously sent.
 
 ## 5. Future work
