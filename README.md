@@ -11,16 +11,26 @@ It was originally developed by [Asier Serrano Aramburu](https://www.linkedin.com
 ## Index
 1. [How to use](https://github.com/asicoderOfficial/k8sUpdater#howtouse)
 2. [Environment variables explanation](https://github.com/asicoderOfficial/k8sUpdater#environmentvariables)
+
     2.1. REFRESH_FREQUENCY_IN_SECONDS
+
     2.2. VERSIONS_FRONTIER
+
     2.3. Gitlab credentials
+
     2.4. E-mail logging credentials
+
     2.5. Telegram logging credentials
+
     2.6. LATEST_PREFERENCE
 3. [Source code overview (for developers)](https://github.com/asicoderOfficial/k8sUpdater#sourcecodeoverview)
+
     3.1. src/docker_imgs
+
     3.2. src/gitlab
+
     3.3. src/kube
+
     3.4. src/utilities
 4. [Logging system](https://github.com/asicoderOfficial/k8sUpdater#loggingsystem)
 5. [Future work](https://github.com/asicoderOfficial/k8sUpdater#futurework)
@@ -173,14 +183,14 @@ Required if the logs want to be sent by Telegram. For doing so, you'll have to h
 
 ## 3. Source code overview for developers
 Brief overview of how the project's source code is structured.
-3.1. ```src/docker_imgs```
-Everything related to interacting with the DockerHub API.
-3.2. ```src/gitlab```
-Everything related to interacting with the GitLab API.
-3.3. ```src/kube```
-Where the operator code is located (```main_operator.py```) and everything related to interacting with the Kubernetes API.
-3.4. ```src/utilities```
-Multiple functionalities, such as logging, evironment variables handling, update function, versions checking and more.
+
+3.1. ```src/docker_imgs```: Everything related to interacting with the DockerHub API.
+
+3.2. ```src/gitlab```: Everything related to interacting with the GitLab API.
+
+3.3. ```src/kube```: Where the operator code is located (```main_operator.py```) and everything related to interacting with the Kubernetes API.
+
+3.4. ```src/utilities```: Multiple functionalities, such as logging, evironment variables handling, update function, versions checking and more.
 
 ## 4. Logging system
 There are 3 channels for logging available, which share the same messages:
