@@ -1,4 +1,4 @@
-![alt text](https://github.com/asicoderOfficial/k8sUpdater/blob/main/logo.png)
+![alt text](logo.png)
 # K8sUpdater: Kubernetes automatic image versions control
 ![alt text](https://img.shields.io/badge/Python-3.8-blue)![alt text](https://img.shields.io/badge/license-Apache%202.0-blueviolet)
 
@@ -53,7 +53,7 @@ Note: GitLab images tags must follow [PEP440](https://peps.python.org/pep-0440/)
 Let's see it with an example! We'll create an operator that monitors a  <em>nginx</em> deployment, called nginx-deployment.
 
 1. Apply the yamls/k8sUpdater-crd.yml file. Don't change anything of it. You will do this only once.
-```
+```yml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -87,7 +87,7 @@ spec:
               - containerregistry
 ```
 2. Configure and apply your deployment.yml file. There's a template at yamls/deployment.yml
-```
+```yml
 apiVersion: apps/v1 
 kind: Deployment
 metadata:
@@ -117,7 +117,7 @@ spec:
     # DON'T FORGET TO SET COMPUTER POWER USAGE LIMITS!! -> https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 ```
 3. Create and apply the object. You can find the template at yamls/object.yml
-```
+```yml
 apiVersion: k8supdater/v1
 kind: VersioningHandler
 metadata:
