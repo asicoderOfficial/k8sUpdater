@@ -39,6 +39,8 @@ It was originally developed by [Asier Serrano Aramburu](https://www.linkedin.com
 8. [License](https://github.com/asicoderOfficial/k8sUpdater/#license)
 
 ## 1. How to use
+
+**IMPORTANT**: This operator will only work if the deployments it is checking the images of, have an ImagePullPolicy Always set!
 The workflow is the following:
 1. A cluster. You can create one easily with [Minikube](https://minikube.sigs.k8s.io/docs/start/).
 2. Create and apply a [CustomResourceDefinition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/).
