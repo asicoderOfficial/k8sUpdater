@@ -8,38 +8,6 @@ It is coded in Python 3.8 and uses the [Kopf](https://github.com/nolar/kopf) lib
 
 It was originally developed by [Asier Serrano Aramburu](https://www.linkedin.com/in/asierserrano/) during his 2022 [summer internship](https://home.cern/summer-student-programme) at [CERN](https://home.web.cern.ch/).
 
-## Index
-1. [How to use](https://github.com/asicoderOfficial/k8sUpdater#howtouse)
-2. [Environment variables explanation](https://github.com/asicoderOfficial/k8sUpdater#environmentvariables)
-
-    2.1. REFRESH_FREQUENCY_IN_SECONDS
-
-    2.2. VERSIONS_FRONTIER
-
-    2.3. LATEST_PREFERENCE
-
-    2.4. Gitlab credentials
-
-    2.5. E-mail logging credentials
-
-    2.6. Telegram logging credentials
-
-    
-3. [Source code overview (for developers)](https://github.com/asicoderOfficial/k8sUpdater#sourcecodeoverview)
-
-    3.1. src/docker_imgs
-
-    3.2. src/gitlab
-
-    3.3. src/kube
-
-    3.4. src/utilities
-4. [Logging system](https://github.com/asicoderOfficial/k8sUpdater#loggingsystem)
-5. [Future work](https://github.com/asicoderOfficial/k8sUpdater#futurework)
-6. [How to contribute](https://github.com/asicoderOfficial/k8sUpdater#howtocontribute)
-7. [Buy me a coffee!](https://github.com/asicoderOfficial/k8sUpdater#buymeacoffee)
-8. [License](https://github.com/asicoderOfficial/k8sUpdater/#license)
-
 ## 1. How to use
 
 **IMPORTANT**: This operator will only work if the deployments it is checking the images of, have an ImagePullPolicy Always set!
