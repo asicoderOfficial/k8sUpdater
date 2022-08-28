@@ -195,7 +195,8 @@ When sending a new log message, it is first checked that it is not the same as i
 ## 6. How to contribute
 Check [this guide](https://gist.github.com/MarcDiethelm/7303312).
 
-## 7. Buy me a coffee!
+## 7. License
+Apache 2.0 license
 
-## 8. License
-Apache 2.0 license.
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/asicoder)
