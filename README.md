@@ -107,13 +107,17 @@ And that's it! Now the operator will be checking for suitable updates every 2 se
 For building your custom image, clone this repository, modify the code and build it using ```build.sh``` file.
 
 ## 2. Environment variables explanation
-2.1. <em>REFRESH_FREQUENCY_IN_SECONDS</em>
+2.1. <em>REFRESH_FREQUENCY_IN_SECONDS</em>:
+
 **COMPULSORY**
+
 It is used to indicate the amount of seconds between each check for new updates.
 It is recommended to put a high value, such as 43200 (12 hours).
 
-2.2. <em>VERSIONS_FRONTIER</em>
+2.2. <em>VERSIONS_FRONTIER</em>:
+
 **COMPULSORY**
+
 It denotes the limit between when to update automatically, and when to notify the user only.
 * A newer versions is identified at the right of the frontier: update automatically, as it is not a major update that needs beforehand supervision.
 * A newer versions is identified at the left of the frontier: notify the user, as it is a major update that needs beforehand supervision.
@@ -128,23 +132,29 @@ Let's illustrate it with some examples with a value of 2 (the frontier is denote
 It is important to note that, for DockerHub images, this will work also for the ones whose tag contains an operating system, such as 3.2.1-alpine.
 It would find all the corresponding <em>-alpine</em> images, extract the version numbers and compare.
 
-2.3. <em>LATEST_PREFERENCE</em>
+2.3. <em>LATEST_PREFERENCE</em>:
+
 **COMPULSORY**
+
 There is a special case with latest tag.
 If the current version is latest, and another latest is found to be newer, the user must specify if updating automatically or notifying. The possible values are the following:
 * "true": Update automatically.
 * "false": Notify that there's a newer latest.
 
 
-2.4. Gitlab credentials.
+2.4. Gitlab credentials:
+
 Optional.
+
 Only needed if a Gitlab container registry of a repository is needed to be tracked for a deployment.
 * <em>GITLAB_BASE_URL</em>: The URL where all projects of your organization can be found.
 * <em>GITLAB_TOKEN</em>: Personal access token, [see here](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html).
 * <em>GITLAB_PROJECT_ID</em>: The numeric ID of the repository that contains the container registry.
 
-2.5. E-mail logging credentials
+2.5. E-mail logging credentials:
+
 Optional.
+
 Required if the logs want to be sent by e-mail.
 * <em>EMAIL_HOST</em>: The service that lets you send and receive e-mail across networks.
 * <em>EMAIL_PASSWORD</em>: The password of sender.
@@ -152,8 +162,10 @@ Required if the logs want to be sent by e-mail.
 * <em>EMAIL_RECIPIENT</em>: Who receives the log e-mail.
 * <em>EMAIL_PORT</em>: The port reserved for e-mail.
 
-2.6. Telegram logging credentials
+2.6. Telegram logging credentials:
+
 Optional.
+
 Required if the logs want to be sent by Telegram. For doing so, you'll have to have a chat dedicated to this logging, by [creating a bot](https://core.telegram.org/Bots).
 * <em>TELEGRAM_CHAT_ID</em>: The [id of the chat](https://telegram.me/myidbot).
 * <em>TELEGRAM_TOKEN</em>: Authentication token.
