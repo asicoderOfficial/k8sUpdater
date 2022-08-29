@@ -9,7 +9,7 @@
 
 It is coded in Python 3.8 and uses the [Kopf](https://github.com/nolar/kopf) library to create the operator.
 
-It was originally developed by [Asier Serrano Aramburu](https://www.linkedin.com/in/asierserrano/) during his 2022 [summer internship](https://home.cern/summer-student-programme) at [CERN](https://home.web.cern.ch/).
+It was originally developed by [Asier Serrano Aramburu](https://www.linkedin.com/in/asierserrano/) during his 2022 [summer internship](https://home.cern/summer-student-programme) at [CERN](https://home.web.cern.ch/), supervised by [Aris Fkiaras](https://www.linkedin.com/in/aris-fkiaras/).
 
 ## 1. How to use
 
