@@ -213,5 +213,7 @@ Check [this guide](https://gist.github.com/MarcDiethelm/7303312).
 ## 7. License
 Apache 2.0 license
 
+## 8. Donations
+Help CERN's LHC with [LHC@Home](https://lhcathome.web.cern.ch/), the volunteer computing platform where you donate idle time on your computer to help physicists compare theory with experiment, in the search for new fundamental particles and answers to questions about the Universe!
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/asicoder)
